@@ -5,9 +5,12 @@ const bodyParser = require('body-parser')
 const consign = require('consign')
 const path = require('path')
 const favicon = require('serve-favicon')
-const logger = require('../../logger')
+
 //global
-app.config = require('../config')
+app.config = require('./config.js')()
+app.logger = require('../logger')(app.config)
+
+app.config.print(app.logger)
 
 consign()
     .then('./scripts')
@@ -15,7 +18,7 @@ consign()
 
 // Log
 app.use((req, res, next) => {
-    logger.express(req.method + ':' + req.url, { query: req.query, params: req.params, headers: req.headers })
+    app.logger.express(req.method + ':' + req.url, { query: req.query, params: req.params, headers: req.headers })
     next()
 })
 
@@ -36,7 +39,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // ASSETS
 app.use(express.static(path.join(__dirname, '/../public')))
-app.use(favicon(path.join(__dirname, '/../public', 'favicon.png')))
+app.use(favicon(path.join(__dirname, 'public', 'favicon.png')))
 app.get('/favicon.ico', (req, res) => {
     res.status(204)
 })
@@ -60,7 +63,7 @@ app.use(function (req, res, next) {
 if (app.config.prod) {
     // production error handler
     app.use(function (err, req, res, next) {
-        logger.express(err)
+        app.logger.express(err)
         res.status(err.status || 500).send(JSON.stringify({
             message: err.message,
             error: {}
@@ -70,13 +73,18 @@ if (app.config.prod) {
 else {
     // development error handler
     app.use(function (err, req, res, next) {
-        logger.express(err)
+        app.logger.express(err)
         res.status(err.status || 500).send(JSON.stringify({
             message: err.message,
             error: err
         }))
     })
 }
+
+const port = app.config.server && app.config.server.port || 8080
+app.listen(port, () => {
+    app.logger.info(`********** Executando localhost na porta ${port} **********`)
+})
 
 // EXPORTS:
 module.exports = app

@@ -4,7 +4,8 @@
   "description": "Artificial Intelligence Input Output",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon index"
+    "test": "nodemon index",
+    "start":"node index"
   },
   "keywords": [
     "AI",

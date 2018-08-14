@@ -1,2 +1,2 @@
 # aiio
-Artificial Inteligence Input Output
+Artificial Intelligence Input Output
