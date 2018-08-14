@@ -6,7 +6,7 @@ module.exports = (logger) => {
             logger && logger.debug(exportsObj)
         },
         prod: false,
-        Log: {
+        log: {
             path: '/ignore/logs/',
             enableds: ['info', 'debug', 'error', 'express'],
             colors: {

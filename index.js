@@ -17,7 +17,7 @@ consign()
     .into(app)
 
 // Log
-app.use((req, res, next) => {
+app.use('*',(req, res, next) => {
     app.logger.express(req.method + ':' + req.url, { query: req.query, params: req.params, headers: req.headers })
     next()
 })
